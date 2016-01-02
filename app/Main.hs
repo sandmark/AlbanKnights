@@ -7,22 +7,42 @@ import qualified Data.Char as Char
 import Data.Maybe (fromMaybe)
 import System.Exit (exitSuccess)
 import System.IO (hFlush, stdout)
+import Control.Monad (when)
+
+data Rating = Rating {dai    :: Maybe Int, kaour :: Maybe Int
+                     ,eirlys :: Maybe Int, elsie :: Maybe Int}
+            deriving (Show)
 
 main :: IO ()
-main = mapM_ repl [1..]
+main = repl emptyRating [1..]
 
-repl :: Int -> IO ()
-repl l = do
+emptyRating :: Rating
+emptyRating = Rating {dai    = Nothing, kaour = Nothing
+                     ,eirlys = Nothing, elsie = Nothing}
+
+repl :: Rating -> [Int]-> IO ()
+repl _ [] = error "empty list given."
+repl r (l:ls) = do
   putStr $ "AlbanKnights(" ++ show l ++ "): "
   hFlush stdout
   input <- getLine
+  when (input == "exit") $ do
+    putExitMessage
+    exitSuccess
   case words $ map Char.toLower input of
-    (command:args) -> dispatch command args
-    []             -> return ()
+    []             -> repl r ls
+    (command:args) -> case dispatch command args r of
+      Left str -> do putStrLn str
+                     repl r ls
+      Right r' -> repl r' ls
 
-dispatch :: String -> [String] -> IO ()
-dispatch "exit" _ = putExitMessage >> exitSuccess
-dispatch command _ = putStrLn $ "unknown command: '" ++ command ++ "'"
+dispatch :: String -> [String] -> Rating -> Either String Rating
+dispatch cmd args r
+  | isShow cmd = Left $ show r
+  | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
+
+isShow :: String -> Bool
+isShow = flip elem ["ls","show","list"]
 
 putExitMessage :: IO ()
 putExitMessage = do
