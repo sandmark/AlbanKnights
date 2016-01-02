@@ -43,7 +43,7 @@ repl r (l:ls) = do
   hFlush stdout
   input <- getLine
   when (isExit input) $ do
-    putExitMessage
+    putExitMessage r
     exitSuccess
   case words $ map Char.toLower input of
     []             -> repl r ls
@@ -66,11 +66,14 @@ isExit = isCmd cmdsExit
 isCmd :: [String] -> String -> Bool
 isCmd = flip elem
 
-putExitMessage :: IO ()
-putExitMessage = do
+putExitMessage :: Rating -> IO ()
+putExitMessage r = do
   putStrLn "\nここでセットされた番号は保存されません"
   putStrLn "どこかにメモしておくことを忘れずに\n"
-  putStrLn "--- Enter キーで終了します ---"
+  putStrLn "--------------------------------------------------"
+  putStrLn $ show r
+  putStrLn "--------------------------------------------------\n"
+  putStrLn "=== Enter キーで終了します ==="
   _ <- getLine
   return ()
 
