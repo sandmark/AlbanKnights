@@ -33,13 +33,16 @@ emptyRating = Rating {dai    = Nothing, kaour = Nothing
 cmdsShow :: [String]
 cmdsShow = ["ls","show","list"]
 
+cmdsExit :: [String]
+cmdsExit = ["q", "exit", "quit", ":q"]
+
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
 repl r (l:ls) = do
   putStr $ "AlbanKnights(" ++ show l ++ "): "
   hFlush stdout
   input <- getLine
-  when (input == "exit") $ do
+  when (isExit input) $ do
     putExitMessage
     exitSuccess
   case words $ map Char.toLower input of
@@ -55,7 +58,13 @@ dispatch cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
 
 isShow :: String -> Bool
-isShow = flip elem cmdsShow
+isShow = isCmd cmdsShow
+
+isExit :: String -> Bool
+isExit = isCmd cmdsExit
+
+isCmd :: [String] -> String -> Bool
+isCmd = flip elem
 
 putExitMessage :: IO ()
 putExitMessage = do
