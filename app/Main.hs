@@ -16,16 +16,13 @@ repl l = do
   putStr $ "AlbanKnights(" ++ show l ++ "): "
   hFlush stdout
   input <- getLine
-  dispatch $ words $ map Char.toLower input
+  case words $ map Char.toLower input of
+    (command:args) -> dispatch command args
+    []             -> return ()
 
-dispatch :: [String] -> IO ()
-dispatch [] = return ()
-dispatch (command:args)
-  | isExit command = putExitMessage >> exitSuccess
-  | otherwise = putStrLn $ "unknown command: '" ++ command ++ "'"
-
-isExit :: String -> Bool
-isExit = flip elem ["exit", ":q", "quit", "q"]
+dispatch :: String -> [String] -> IO ()
+dispatch "exit" _ = putExitMessage >> exitSuccess
+dispatch command _ = putStrLn $ "unknown command: '" ++ command ++ "'"
 
 putExitMessage :: IO ()
 putExitMessage = do
