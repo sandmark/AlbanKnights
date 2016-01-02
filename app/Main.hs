@@ -11,7 +11,17 @@ import Control.Monad (when)
 
 data Rating = Rating {dai    :: Maybe Int, kaour :: Maybe Int
                      ,eirlys :: Maybe Int, elsie :: Maybe Int}
-            deriving (Show)
+
+prettyRating :: Rating -> String
+prettyRating r = List.intercalate "\n" $ map tos l
+  where l = [("ダイ", dai r),     ("アイリース", eirlys r)
+            ,("カオル", kaour r), ("エルシィ", elsie r)]
+        tos (name, n) = "【" ++ name ++ "】\t\t=>\t" ++ case n of
+          Just n' -> show n'
+          Nothing -> "不明"
+
+instance Show Rating where
+  show = prettyRating
 
 main :: IO ()
 main = repl emptyRating [1..]
@@ -19,6 +29,9 @@ main = repl emptyRating [1..]
 emptyRating :: Rating
 emptyRating = Rating {dai    = Nothing, kaour = Nothing
                      ,eirlys = Nothing, elsie = Nothing}
+
+cmdsShow :: [String]
+cmdsShow = ["ls","show","list"]
 
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
@@ -42,7 +55,7 @@ dispatch cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
 
 isShow :: String -> Bool
-isShow = flip elem ["ls","show","list"]
+isShow = flip elem cmdsShow
 
 putExitMessage :: IO ()
 putExitMessage = do
