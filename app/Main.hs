@@ -30,12 +30,6 @@ emptyRating :: Rating
 emptyRating = Rating {dai    = Nothing, kaour = Nothing
                      ,eirlys = Nothing, elsie = Nothing}
 
-cmdsShow :: [String]
-cmdsShow = ["ls","show","list"]
-
-cmdsExit :: [String]
-cmdsExit = ["q", "exit", "quit", ":q"]
-
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
 repl r (l:ls) = do
@@ -55,11 +49,44 @@ repl r (l:ls) = do
 dispatch :: String -> [String] -> Rating -> Either String Rating
 dispatch cmd args r
   | isShow cmd = Left $ show r
+  | isSet cmd = set args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
 
+cmdsSet :: [String]
+cmdsSet = ["set", "s"]
+isSet :: String -> Bool
+isSet = isCmd cmdsSet
+
+set :: [String] -> Rating -> Either String Rating
+set [] _ = Left "'set' called with no arguments."
+set [_] _ = Left "'set' called with invalid number of arguments."
+set (npc:pos:_) r = case fromMaybe npc (lookup npc names) of
+  "dai"    -> Right $ r {dai = n}
+  "kaour"  -> Right $ r {kaour = n}
+  "elsie"  -> Right $ r {elsie = n}
+  "eirlys" -> Right $ r {eirlys = n}
+  s     -> Left $ "'" ++ s ++ "' could not be found."
+  where n     = Just (string2int pos)
+        names = [("d","dai")
+                ,("kaoru","kaour")
+                ,("k","kaour")
+                ,("a","eirlys")
+                ,("e","elsie")
+                ,("airi-su","eirlys")
+                ,("erusii","elsie")
+                ,("dai","dai")
+                ,("kaour","kaour")
+                ,("elsie","elsie")
+                ,("eirlys","eirlys")
+                ]
+
+cmdsShow :: [String]
+cmdsShow = ["ls","show","list"]
 isShow :: String -> Bool
 isShow = isCmd cmdsShow
 
+cmdsExit :: [String]
+cmdsExit = ["q", "exit", "quit", ":q"]
 isExit :: String -> Bool
 isExit = isCmd cmdsExit
 
