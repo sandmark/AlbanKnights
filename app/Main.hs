@@ -49,6 +49,7 @@ dispatch :: String -> [String] -> Rating -> Either String Rating
 dispatch cmd args r
   | isList cmd = list r
   | isSet cmd = set args r
+  | isUnset cmd = unset args r
   | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
 
@@ -79,6 +80,20 @@ wrappedPick name s i = right name $ fromRight $ AK.pick s (i-1)
   where right name' keys = "【" ++ name' ++ "】\t(" ++ show i ++ ")\t" ++
                            intercalate " -> " keys
 
+cmdsUnset :: [String]
+cmdsUnset = ["unset","u"]
+isUnset :: String -> Bool
+isUnset = isCmd cmdsUnset
+
+unset :: [String] -> Rating -> Either String Rating
+unset [] _ = Left "使い方: 'unset NPC名'"
+unset (name:_) r = case fromMaybe name (lookup name npcNames) of
+  "dai"    -> Right $ r {dai = Nothing}
+  "kaour"  -> Right $ r {kaour = Nothing}
+  "elsie"  -> Right $ r {elsie = Nothing}
+  "eirlys" -> Right $ r {eirlys = Nothing}
+  s        -> Left $ "'" ++ s ++ "' could not be found."
+
 cmdsSet :: [String]
 cmdsSet = ["set", "s"]
 isSet :: String -> Bool
@@ -92,7 +107,7 @@ set (name:pos:_) r = case fromMaybe name (lookup name npcNames) of
   "kaour"  -> Right $ r {kaour = n}
   "elsie"  -> Right $ r {elsie = n}
   "eirlys" -> Right $ r {eirlys = n}
-  s     -> Left $ "'" ++ s ++ "' could not be found."
+  s        -> Left $ "'" ++ s ++ "' could not be found."
   where n     = Just (string2int pos)
 
 cmdsList :: [String]
