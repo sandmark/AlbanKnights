@@ -1,9 +1,8 @@
 module Main where
 
 import qualified AlbanKnights as AK
-import qualified Data.List as List
-import qualified Data.Map  as Map
-import qualified Data.Char as Char
+import Data.List (intercalate)
+import Data.Char (toLower)
 import Data.Maybe (fromMaybe)
 import System.Exit (exitSuccess)
 import System.IO (hFlush, stdout)
@@ -13,7 +12,7 @@ data Rating = Rating {dai    :: Maybe Int, kaour :: Maybe Int
                      ,eirlys :: Maybe Int, elsie :: Maybe Int}
 
 prettyRating :: Rating -> String
-prettyRating r = List.intercalate "\n" $ map tos l
+prettyRating r = intercalate "\n" $ map tos l
   where l = [("ダイ", dai r),     ("アイリース", eirlys r)
             ,("カオル", kaour r), ("エルシィ", elsie r)]
         tos (name, n) = "【" ++ name ++ "】\t\t=>\t" ++ case n of
@@ -39,7 +38,7 @@ repl r (l:ls) = do
   when (isExit input) $ do
     putExitMessage r
     exitSuccess
-  case words $ map Char.toLower input of
+  case words $ map toLower input of
     []             -> repl r ls
     (command:args) -> case dispatch command args r of
       Left str -> do putStrLn str
@@ -60,25 +59,13 @@ isSet = isCmd cmdsSet
 set :: [String] -> Rating -> Either String Rating
 set [] _ = Left "'set' called with no arguments."
 set [_] _ = Left "'set' called with invalid number of arguments."
-set (npc:pos:_) r = case fromMaybe npc (lookup npc names) of
+set (npc:pos:_) r = case fromMaybe npc (lookup npc npcNames) of
   "dai"    -> Right $ r {dai = n}
   "kaour"  -> Right $ r {kaour = n}
   "elsie"  -> Right $ r {elsie = n}
   "eirlys" -> Right $ r {eirlys = n}
   s     -> Left $ "'" ++ s ++ "' could not be found."
   where n     = Just (string2int pos)
-        names = [("d","dai")
-                ,("kaoru","kaour")
-                ,("k","kaour")
-                ,("a","eirlys")
-                ,("e","elsie")
-                ,("airi-su","eirlys")
-                ,("erusii","elsie")
-                ,("dai","dai")
-                ,("kaour","kaour")
-                ,("elsie","elsie")
-                ,("eirlys","eirlys")
-                ]
 
 cmdsShow :: [String]
 cmdsShow = ["ls","show","list"]
@@ -107,23 +94,22 @@ putExitMessage r = do
 string2int :: String -> Int
 string2int str = read str :: Int
 
-key2npc :: String -> String
-key2npc key = fromMaybe key (Map.lookup key names)
-  where names =
-          Map.fromList [("dai",   "ダイ"),   ("eirlys", "アイリース")
-                       ,("kaour", "カオル"), ("elsie",  "エルシィ")]
-
-npc2key :: String -> String
-npc2key str = map Char.toLower $ fromMaybe str (Map.lookup str table)
-  where table =
-          Map.fromList
-          [("ダイ", "dai")
-          ,("アイリース", "eirlys")
-          ,("airi-su", "eirlys")
-          ,("airiisu", "eirlys")
-          ,("カオル", "kaour")
-          ,("kaoru", "kaour")
-          ,("erusii", "elsie")
-          ,("erusixi", "elsie")
-          ,("erusili", "elsie")
-          ]
+npcNames :: [(String, String)]
+npcNames = [("d","dai")
+           ,("kaoru","kaour")
+           ,("k","kaour")
+           ,("a","eirlys")
+           ,("e","elsie")
+           ,("airi-su","eirlys")
+           ,("erusii","elsie")
+           ,("dai","dai")
+           ,("kaour","kaour")
+           ,("elsie","elsie")
+           ,("eirlys","eirlys")
+           ,("ダイ", "dai")
+           ,("カオル", "kaour")
+           ,("アイリース", "eirlys")
+           ,("エルシィ", "elsie")
+           ,("erusixi", "elsie")
+           ,("erusili", "elsie")
+           ]
