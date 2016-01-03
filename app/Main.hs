@@ -47,7 +47,7 @@ repl r (l:ls) = do
 
 dispatch :: String -> [String] -> Rating -> Either String Rating
 dispatch cmd args r
-  | isShow cmd = Left $ show r
+  | isList cmd = list r
   | isSet cmd = set args r
   | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
@@ -93,10 +93,13 @@ set (name:pos:_) r = case fromMaybe name (lookup name npcNames) of
   s     -> Left $ "'" ++ s ++ "' could not be found."
   where n     = Just (string2int pos)
 
-cmdsShow :: [String]
-cmdsShow = ["ls","show","list"]
-isShow :: String -> Bool
-isShow = isCmd cmdsShow
+cmdsList :: [String]
+cmdsList = ["ls","show","list"]
+isList :: String -> Bool
+isList = isCmd cmdsList
+
+list :: Rating -> Either String Rating
+list = undefined
 
 cmdsExit :: [String]
 cmdsExit = ["q", "exit", "quit", ":q"]
