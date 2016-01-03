@@ -67,15 +67,17 @@ npc name args r = case fromMaybe name (lookup name npcNames) of
 
 npcKeywords :: String -> String -> Maybe Int -> [String] -> String
 npcKeywords key name rate args = case rate of
-  Just i -> right name $ wrappedPick key i
+  Just i ->  wrappedPick name key i
   Nothing -> case args of
-    (i:_) -> right name $ wrappedPick key (string2int i)
-    _     -> left name
-  where wrappedPick s i = fromRight $ AK.pick s (i-1)
-        right name' keys = "【" ++ name' ++ "】  " ++ intercalate " -> " keys
-        left  name' = name' ++ "の番号は未設定です。\n" ++
-                      "'" ++ key ++ " 1' のようにして指定するか、" ++
-                      "'set' コマンドを使ってください。"
+    (i:_) -> wrappedPick name key (string2int i)
+    _     -> name ++ "の番号は未設定です。\n" ++
+             "'" ++ key ++ " 1' のようにして指定するか、" ++
+             "'set' コマンドを使ってください。"
+
+wrappedPick :: String -> String -> Int -> String
+wrappedPick name s i = right name $ fromRight $ AK.pick s (i-1)
+  where right name' keys = "【" ++ name' ++ "】\t(" ++ show i ++ ")\t" ++
+                           intercalate " -> " keys
 
 cmdsSet :: [String]
 cmdsSet = ["set", "s"]
@@ -99,7 +101,19 @@ isList :: String -> Bool
 isList = isCmd cmdsList
 
 list :: Rating -> Either String Rating
-list = undefined
+list r = Left $ intercalate "\n" $ map f npcs
+  where npcs = [("ダイ","dai",dai r),("アイリース","eirlys",eirlys r)
+               ,("カオル","kaour",kaour r),("エルシィ","elsie",elsie r)
+               ]
+        f (name,key,i) = case i of
+          Just n  -> wrappedPick name key n
+          Nothing -> "【" ++ name ++ "】\t(不明)"
+{-
+【ダイ】        [1]   => 遊び(1)          -> 恋愛(2)  -> 遊び(3)
+【アイリース】 [96]   => 恋愛(96)         -> 料理(97) -> 任務(1)
+【カオル】     [不明]
+【エルシィ】   [77]   => ファッション(77) -> 恋愛(78) -> 任務(79)
+-}
 
 cmdsExit :: [String]
 cmdsExit = ["q", "exit", "quit", ":q"]
