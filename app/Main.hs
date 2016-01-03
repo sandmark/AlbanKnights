@@ -49,7 +49,33 @@ dispatch :: String -> [String] -> Rating -> Either String Rating
 dispatch cmd args r
   | isShow cmd = Left $ show r
   | isSet cmd = set args r
+  | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
+
+isNPC :: String -> Bool
+isNPC name = case lookup name npcNames of
+  Just _  -> True
+  Nothing -> False
+
+npc :: String -> [String] -> Rating -> Either String Rating
+npc name args r = case fromMaybe name (lookup name npcNames) of
+  "dai" -> Left $ npcKeywords "dai" "ダイ" (dai r) args
+  "kaour" -> Left $ npcKeywords "kaour" "カオル" (kaour r) args
+  "elsie" -> Left $ npcKeywords "elsie" "エルシィ" (elsie r) args
+  "eirlys" -> Left $ npcKeywords "eirlys" "アイリース" (eirlys r) args
+  _     -> Left "そのようなNPCは存在しません"
+
+npcKeywords :: String -> String -> Maybe Int -> [String] -> String
+npcKeywords key name rate args = case rate of
+  Just i -> right name $ wrappedPick key i
+  Nothing -> case args of
+    (i:_) -> right name $ wrappedPick key (string2int i)
+    _     -> left name
+  where wrappedPick s i = fromRight $ AK.pick s (i-1)
+        right name' keys = "【" ++ name' ++ "】  " ++ intercalate " -> " keys
+        left  name' = name' ++ "の番号は未設定です。\n" ++
+                      "'" ++ key ++ " 1' のようにして指定するか、" ++
+                      "'set'コマンドを使ってください。"
 
 cmdsSet :: [String]
 cmdsSet = ["set", "s"]
@@ -59,7 +85,7 @@ isSet = isCmd cmdsSet
 set :: [String] -> Rating -> Either String Rating
 set [] _ = Left "'set' called with no arguments."
 set [_] _ = Left "'set' called with invalid number of arguments."
-set (npc:pos:_) r = case fromMaybe npc (lookup npc npcNames) of
+set (name:pos:_) r = case fromMaybe name (lookup name npcNames) of
   "dai"    -> Right $ r {dai = n}
   "kaour"  -> Right $ r {kaour = n}
   "elsie"  -> Right $ r {elsie = n}
@@ -113,3 +139,7 @@ npcNames = [("d","dai")
            ,("erusixi", "elsie")
            ,("erusili", "elsie")
            ]
+
+fromRight :: Either a b -> b
+fromRight (Right x) = x
+fromRight (Left _)  = error "fromRight: Argument takes from 'Left _'"
