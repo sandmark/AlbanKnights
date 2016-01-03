@@ -150,7 +150,9 @@ putExitMessage r = do
   return ()
 
 string2int :: String -> Int
-string2int str = read str :: Int
+string2int str = case reads str :: [(Int, String)] of
+  [(i,_)] -> i
+  []      -> 1
 
 npcNames :: [(String, String)]
 npcNames = [("d","dai")
