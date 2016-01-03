@@ -75,7 +75,7 @@ npcKeywords key name rate args = case rate of
         right name' keys = "【" ++ name' ++ "】  " ++ intercalate " -> " keys
         left  name' = name' ++ "の番号は未設定です。\n" ++
                       "'" ++ key ++ " 1' のようにして指定するか、" ++
-                      "'set'コマンドを使ってください。"
+                      "'set' コマンドを使ってください。"
 
 cmdsSet :: [String]
 cmdsSet = ["set", "s"]
@@ -83,8 +83,8 @@ isSet :: String -> Bool
 isSet = isCmd cmdsSet
 
 set :: [String] -> Rating -> Either String Rating
-set [] _ = Left "'set' called with no arguments."
-set [_] _ = Left "'set' called with invalid number of arguments."
+set [] _ = Left "使い方: 'set NPC名 番号'"
+set [_] _ = Left "使い方: 'set NPC名 番号'"
 set (name:pos:_) r = case fromMaybe name (lookup name npcNames) of
   "dai"    -> Right $ r {dai = n}
   "kaour"  -> Right $ r {kaour = n}
