@@ -177,3 +177,6 @@ TODO
 - 現在位置を予想する
 - update と同時に list を呼び出す
 - ×ボタンで閉じられたときもメッセージを表示する
+- AlbanKnights モジュールで Data.Map を使わない
+- AlbanKnights.safePick の実装
+- AlbanKnights.hs からテーブル表を yaml に移す
