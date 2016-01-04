@@ -19,6 +19,10 @@ prettyRating r = intercalate "\n" $ map tos l
           Just n' -> show n'
           Nothing -> "不明"
 
+mapRating :: (Maybe Int -> Maybe Int) -> Rating -> Rating
+mapRating f (Rating {dai = d, eirlys = a, kaour = k, elsie = e}) =
+  Rating {dai = f d, eirlys = f a, kaour = f k, elsie = f e}
+
 instance Show Rating where
   show = prettyRating
 
@@ -50,8 +54,22 @@ dispatch cmd args r
   | isList cmd = list r
   | isSet cmd = set args r
   | isUnset cmd = unset args r
+  | isUpdate cmd = update r
   | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
+
+cmdsUpdate :: [String]
+cmdsUpdate = ["update","next","x","up"]
+
+isUpdate :: String -> Bool
+isUpdate = isCmd cmdsUpdate
+
+update :: Rating -> Either String Rating
+update r = Right $ mapRating updateEach r
+  where updateEach Nothing = Nothing
+        updateEach (Just x)= Just $ up x
+          where up n = let n' = n + 3
+                       in if n' > 97 then n' - 97 else n'
 
 isNPC :: String -> Bool
 isNPC name = case lookup name npcNames of
