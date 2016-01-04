@@ -129,7 +129,7 @@ set (name:pos:_) r = case fromMaybe name (lookup name npcNames) of
   where n     = Just (string2int pos)
 
 cmdsList :: [String]
-cmdsList = ["ls","show","list"]
+cmdsList = ["ls","show","list","l"]
 isList :: String -> Bool
 isList = isCmd cmdsList
 
