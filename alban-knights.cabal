@@ -1,8 +1,12 @@
 name:                alban-knights
-version:             0.2.0.1
+version:             0.2.0.2
 synopsis:            An utility tool for AlbanKnights of MMO Mabinogi
 description:         auto-mated calculation of favorability ratings
+<<<<<<< HEAD
 homepage:            https://github.com/sandmark/AlbanKnights
+=======
+homepage:            https://github.com/sandmark/AlbanKnights/
+>>>>>>> hotfix/0.2.0.2
 license:             BSD3
 license-file:        LICENSE
 author:              sandmark
@@ -39,4 +43,4 @@ test-suite alban-knights-test
 
 source-repository head
   type:     git
-  location: https://github.com/sandmark/AlbanKnights
+  location: https://github.com/sandmark/AlbanKnights/
