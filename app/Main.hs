@@ -85,13 +85,13 @@ npc name args r = case fromMaybe name (lookup name npcNames) of
   _     -> Left "そのようなNPCは存在しません"
 
 npcKeywords :: String -> String -> Maybe Int -> [String] -> String
-npcKeywords key name rate args = case rate of
-  Just i ->  wrappedPick name key i
-  Nothing -> case args of
-    (i:_) -> wrappedPick name key (string2int i)
-    _     -> name ++ "の番号は未設定です。\n" ++
-             "'" ++ key ++ " 1' のようにして指定するか、" ++
-             "'set' コマンドを使ってください。"
+npcKeywords key name rate args = case args of
+  (i:_) -> wrappedPick name key (string2int i)
+  _     -> case rate of
+    Just i  -> wrappedPick name key i
+    Nothing -> name ++ "の番号は未設定です。\n" ++
+               "'" ++ key ++ " 1' のようにして指定するか、" ++
+               "'set' コマンドを使ってください。"
 
 wrappedPick :: String -> String -> Int -> String
 wrappedPick name s i = right name $ fromRight $ AK.pick s (i-1)
