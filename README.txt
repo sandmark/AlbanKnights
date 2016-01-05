@@ -1,6 +1,6 @@
 好感度メモ帳＠アルバン騎士団ベルテン特別班
 ==========================================
-Version: 0.2.0.1
+Version: 0.2.0.2
 Copyright: (C) sandmark
 License:   BSD3 (See also LICENSE)
 
