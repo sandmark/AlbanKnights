@@ -1,6 +1,7 @@
 module Main where
 
 import qualified AlbanKnights as AK
+import Rating
 import Data.List (intercalate)
 import Data.Char (toLower)
 import Data.Maybe (fromMaybe)
@@ -8,30 +9,8 @@ import System.Exit (exitSuccess)
 import System.IO (hFlush, stdout)
 import Control.Monad (when)
 
-data Rating = Rating {dai    :: Maybe Int, kaour :: Maybe Int
-                     ,eirlys :: Maybe Int, elsie :: Maybe Int}
-
-prettyRating :: Rating -> String
-prettyRating r = intercalate "\n" $ map tos l
-  where l = [("ダイ", dai r),     ("アイリース", eirlys r)
-            ,("カオル", kaour r), ("エルシィ", elsie r)]
-        tos (name, n) = "【" ++ name ++ "】\t\t=>\t" ++ case n of
-          Just n' -> show n'
-          Nothing -> "不明"
-
-mapRating :: (Maybe Int -> Maybe Int) -> Rating -> Rating
-mapRating f (Rating {dai = d, eirlys = a, kaour = k, elsie = e}) =
-  Rating {dai = f d, eirlys = f a, kaour = f k, elsie = f e}
-
-instance Show Rating where
-  show = prettyRating
-
 main :: IO ()
 main = repl emptyRating [1..]
-
-emptyRating :: Rating
-emptyRating = Rating {dai    = Nothing, kaour = Nothing
-                     ,eirlys = Nothing, elsie = Nothing}
 
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
