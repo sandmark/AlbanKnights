@@ -1,6 +1,7 @@
 module Main where
 
 import qualified AlbanKnights as AK
+import Rating
 import Data.List (intercalate)
 import Data.Char (toLower)
 import Data.Maybe (fromMaybe)
@@ -8,30 +9,8 @@ import System.Exit (exitSuccess)
 import System.IO (hFlush, stdout)
 import Control.Monad (when)
 
-data Rating = Rating {dai    :: Maybe Int, kaour :: Maybe Int
-                     ,eirlys :: Maybe Int, elsie :: Maybe Int}
-
-prettyRating :: Rating -> String
-prettyRating r = intercalate "\n" $ map tos l
-  where l = [("ダイ", dai r),     ("アイリース", eirlys r)
-            ,("カオル", kaour r), ("エルシィ", elsie r)]
-        tos (name, n) = "【" ++ name ++ "】\t\t=>\t" ++ case n of
-          Just n' -> show n'
-          Nothing -> "不明"
-
-mapRating :: (Maybe Int -> Maybe Int) -> Rating -> Rating
-mapRating f (Rating {dai = d, eirlys = a, kaour = k, elsie = e}) =
-  Rating {dai = f d, eirlys = f a, kaour = f k, elsie = f e}
-
-instance Show Rating where
-  show = prettyRating
-
 main :: IO ()
 main = repl emptyRating [1..]
-
-emptyRating :: Rating
-emptyRating = Rating {dai    = Nothing, kaour = Nothing
-                     ,eirlys = Nothing, elsie = Nothing}
 
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
@@ -55,8 +34,23 @@ dispatch cmd args r
   | isSet cmd = set args r
   | isUnset cmd = unset args r
   | isUpdate cmd = update r
+  | isLock cmd = lock args r
   | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
+
+cmdsLock :: [String]
+cmdsLock = ["lock","lo","const","c","bind","b","unlock","unbind","toggle"]
+
+isLock :: String -> Bool
+isLock = isCmd cmdsLock
+
+lock :: [String] -> Rating -> Either String Rating
+lock [] _ = Left "NPCを指定してください"
+lock (arg:_) r =
+  case getNpcIndex name r of
+    Nothing -> Left "そのようなNPCは存在しません"
+    Just (i, locked) -> Right $ setNpcIndex name (i, not locked) r
+  where name = fromMaybe arg (lookup arg npcNames)
 
 cmdsUpdate :: [String]
 cmdsUpdate = ["update","next","x","up"]
@@ -66,8 +60,9 @@ isUpdate = isCmd cmdsUpdate
 
 update :: Rating -> Either String Rating
 update r = Right $ mapRating updateEach r
-  where updateEach Nothing = Nothing
-        updateEach (Just x)= Just $ up x
+  where updateEach (Nothing, l) = (Nothing, l)
+        updateEach (Just x, True) = (Just x, True)
+        updateEach (Just x, False) = (Just $ up x, False)
           where up n = let n' = n + 3
                        in if n' > 97 then n' - 97 else n'
 
@@ -84,19 +79,21 @@ npc name args r = case fromMaybe name (lookup name npcNames) of
   "eirlys" -> Left $ npcKeywords "eirlys" "アイリース" (eirlys r) args
   _     -> Left "そのようなNPCは存在しません"
 
-npcKeywords :: String -> String -> Maybe Int -> [String] -> String
-npcKeywords key name rate args = case args of
-  (i:_) -> wrappedPick name key (string2int i)
-  _     -> case rate of
-    Just i  -> wrappedPick name key i
-    Nothing -> name ++ "の番号は未設定です。\n" ++
-               "'" ++ key ++ " 1' のようにして指定するか、" ++
-               "'set' コマンドを使ってください。"
+npcKeywords :: String -> String -> Index -> [String] -> String
+npcKeywords key name index args = case args of
+  (i:_) -> wrappedPick name key (string2int i) False
+  _     -> case index of
+    (Just i, l)  -> wrappedPick name key i l
+    (Nothing, _) -> name ++ "の番号は未設定です。\n" ++
+                    "'" ++ key ++ " 1' のようにして指定するか、" ++
+                    "'set' コマンドを使ってください。"
 
-wrappedPick :: String -> String -> Int -> String
-wrappedPick name s i = right name $ fromRight $ AK.pick s (i-1)
-  where right name' keys = "【" ++ name' ++ "】\t(" ++ show i ++ ")\t" ++
-                           intercalate " -> " keys
+wrappedPick :: String -> String -> Int -> Lock -> String
+wrappedPick name s i l = toString name $ fromRight $ AK.pick s (i-1)
+  where toString name' keys =
+          let locked = if l then " [固定]" else "\t"
+          in "【" ++ name' ++ "】\t" ++ show i ++ locked ++ "\t" ++
+             intercalate " -> " keys
 
 cmdsUnset :: [String]
 cmdsUnset = ["unset","u"]
@@ -106,10 +103,10 @@ isUnset = isCmd cmdsUnset
 unset :: [String] -> Rating -> Either String Rating
 unset [] _ = Left "使い方: 'unset NPC名'"
 unset (name:_) r = case fromMaybe name (lookup name npcNames) of
-  "dai"    -> Right $ r {dai = Nothing}
-  "kaour"  -> Right $ r {kaour = Nothing}
-  "elsie"  -> Right $ r {elsie = Nothing}
-  "eirlys" -> Right $ r {eirlys = Nothing}
+  "dai"    -> Right $ r {dai = emptyIndex}
+  "kaour"  -> Right $ r {kaour = emptyIndex}
+  "elsie"  -> Right $ r {elsie = emptyIndex}
+  "eirlys" -> Right $ r {eirlys = emptyIndex}
   s        -> Left $ "'" ++ s ++ "' could not be found."
 
 cmdsSet :: [String]
@@ -121,12 +118,12 @@ set :: [String] -> Rating -> Either String Rating
 set [] _ = Left "使い方: 'set NPC名 番号'"
 set [_] _ = Left "使い方: 'set NPC名 番号'"
 set (name:pos:_) r = case fromMaybe name (lookup name npcNames) of
-  "dai"    -> Right $ r {dai = n}
-  "kaour"  -> Right $ r {kaour = n}
-  "elsie"  -> Right $ r {elsie = n}
-  "eirlys" -> Right $ r {eirlys = n}
+  "dai"    -> Right $ r {dai = newIndex n}
+  "kaour"  -> Right $ r {kaour = newIndex n}
+  "elsie"  -> Right $ r {elsie = newIndex n}
+  "eirlys" -> Right $ r {eirlys = newIndex n}
   s        -> Left $ "'" ++ s ++ "' could not be found."
-  where n     = Just (string2int pos)
+  where n     = string2int pos
 
 cmdsList :: [String]
 cmdsList = ["ls","show","list","l"]
@@ -138,8 +135,8 @@ list r = Left $ intercalate "\n" $ map f npcs
   where npcs = [("ダイ","dai",dai r),("アイリース","eirlys",eirlys r)
                ,("カオル","kaour",kaour r),("エルシィ","elsie",elsie r)
                ]
-        f (name,key,i) = case i of
-          Just n  -> wrappedPick name key n
+        f (name,key,(i,l)) = case i of
+          Just n  -> wrappedPick name key n l
           Nothing -> "【" ++ name ++ "】\t(不明)"
 {-
 【ダイ】        [1]   => 遊び(1)          -> 恋愛(2)  -> 遊び(3)
