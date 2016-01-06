@@ -90,8 +90,8 @@ npcKeywords key name index args = case args of
 wrappedPick :: String -> String -> Int -> Lock -> String
 wrappedPick name s i l = toString name $ fromRight $ AK.pick s (i-1)
   where toString name' keys =
-          let locked = if l then "[固定]" else ""
-          in "【" ++ name' ++ "】\t(" ++ show i ++ locked ++ ")\t\t" ++
+          let locked = if l then "[固定]" else "\t"
+          in "【" ++ name' ++ "】\t(" ++ show i ++ ") " ++ locked ++ "\t" ++
              intercalate " -> " keys
 
 cmdsUnset :: [String]
