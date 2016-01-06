@@ -7,6 +7,7 @@ module Rating
        , emptyRating
        , emptyIndex
        , newIndex
+       , getNpcIndex
        ) where
 
 import Data.List (intercalate)
@@ -28,6 +29,13 @@ prettyRating r = intercalate "\n" $ map tos l
           (Just n, True)   -> show n ++ "[固定]"
           (Just n, _)      -> show n
           (Nothing, _)     -> "不明"
+
+getNpcIndex :: String -> Rating -> Maybe Index
+getNpcIndex "dai"    r = Just $ dai r
+getNpcIndex "eirlys" r = Just $ eirlys r
+getNpcIndex "kaour"  r = Just $ kaour r
+getNpcIndex "elsie"  r = Just $ elsie r
+getNpcIndex _ _ = Nothing
 
 mapRating :: (Index -> Index) -> Rating -> Rating
 mapRating f (Rating {dai = d, eirlys = a, kaour = k, elsie = e}) =
