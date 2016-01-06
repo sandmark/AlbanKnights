@@ -34,8 +34,23 @@ dispatch cmd args r
   | isSet cmd = set args r
   | isUnset cmd = unset args r
   | isUpdate cmd = update r
+  | isLock cmd = lock args r
   | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
+
+cmdsLock :: [String]
+cmdsLock = ["lock","lo","const","c"]
+
+isLock :: String -> Bool
+isLock = isCmd cmdsLock
+
+lock :: [String] -> Rating -> Either String Rating
+lock [] _ = Left "NPCを指定してください"
+lock (arg:_) r =
+  case getNpcIndex name r of
+    Nothing -> Left "そのようなNPCは存在しません"
+    Just (i, locked) -> Right $ setNpcIndex name (i, not locked) r
+  where name = fromMaybe arg (lookup arg npcNames)
 
 cmdsUpdate :: [String]
 cmdsUpdate = ["update","next","x","up"]
