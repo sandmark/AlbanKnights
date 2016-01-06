@@ -27,7 +27,6 @@ prettyRating r = intercalate "\n" $ map tos l
   where l = [("ダイ", dai r),     ("アイリース", eirlys r)
             ,("カオル", kaour r), ("エルシィ", elsie r)]
         tos (name, i) = "【" ++ name ++ "】\t\t=>\t" ++ case i of
-          (Just n, True)   -> show n ++ "[固定]"
           (Just n, _)      -> show n
           (Nothing, _)     -> "不明"
 
