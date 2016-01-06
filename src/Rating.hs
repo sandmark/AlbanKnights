@@ -8,6 +8,7 @@ module Rating
        , emptyIndex
        , newIndex
        , getNpcIndex
+       , setNpcIndex
        ) where
 
 import Data.List (intercalate)
@@ -36,6 +37,13 @@ getNpcIndex "eirlys" r = Just $ eirlys r
 getNpcIndex "kaour"  r = Just $ kaour r
 getNpcIndex "elsie"  r = Just $ elsie r
 getNpcIndex _ _ = Nothing
+
+setNpcIndex :: String -> Index -> Rating -> Rating
+setNpcIndex "dai"    i r = r {dai    = i}
+setNpcIndex "eirlys" i r = r {eirlys = i}
+setNpcIndex "kaour"  i r = r {kaour  = i}
+setNpcIndex "elsie"  i r = r {elsie  = i}
+setNpcIndex _ _ _ = error "Rating.setNpcIndex: called with unknown field."
 
 mapRating :: (Index -> Index) -> Rating -> Rating
 mapRating f (Rating {dai = d, eirlys = a, kaour = k, elsie = e}) =
