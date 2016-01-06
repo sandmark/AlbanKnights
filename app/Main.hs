@@ -61,7 +61,8 @@ isUpdate = isCmd cmdsUpdate
 update :: Rating -> Either String Rating
 update r = Right $ mapRating updateEach r
   where updateEach (Nothing, l) = (Nothing, l)
-        updateEach (Just x, l)= (Just $ up x, l)
+        updateEach (Just x, True) = (Just x, True)
+        updateEach (Just x, False) = (Just $ up x, False)
           where up n = let n' = n + 3
                        in if n' > 97 then n' - 97 else n'
 
