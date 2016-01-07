@@ -1,5 +1,5 @@
 name:                alban-knights
-version:             0.2.1.2
+version:             0.2.1.3
 synopsis:            An utility tool for AlbanKnights of MMO Mabinogi
 description:         auto-mated calculation of favorability ratings
 homepage:            https://github.com/sandmark/AlbanKnights/
