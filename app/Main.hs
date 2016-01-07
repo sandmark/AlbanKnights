@@ -39,7 +39,8 @@ dispatch cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"
 
 cmdsLock :: [String]
-cmdsLock = ["lock","lo","const","c","bind","b","unlock","unbind","toggle"]
+cmdsLock = ["lock","lo","const","c","bind","b","unlock","unbind","toggle"
+           ,"hold","unhold","h"]
 
 isLock :: String -> Bool
 isLock = isCmd cmdsLock
