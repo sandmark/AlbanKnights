@@ -1,6 +1,7 @@
 module AlbanKnights
     (
       pick
+    , unsafePick
     ) where
 
 import qualified Data.Map as Map
@@ -9,6 +10,11 @@ pick :: String -> Int -> Either String [String]
 pick key i = case Map.lookup key table of
   Just keys -> Right $ map (keywords !!) $ take 3 $ drop i keys
   Nothing   -> Left $ "No NPC found named " ++ key ++ "."
+
+unsafePick :: String -> Int -> [String]
+unsafePick key i = case Map.lookup key table of
+  Just keys -> map (keywords !!) $ take 3 $ drop i keys
+  Nothing   -> error "AlbanKnights.unsafePick: called with invalid npc name."
 
 keywords :: [String]
 keywords = ["任務", "訓練", "遊び", "料理", "ファッション", "恋愛"]
