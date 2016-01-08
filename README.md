@@ -6,18 +6,25 @@ AlbanKnights is a BSD3 Licensed utility tool, written in Haskell, for Project Be
 * [Mabinogi](http://mabinogi.nexon.co.jp/)(ja)
 * [Project Belten](http://mabinogi.wikiwiki.jp/?%A5%AF%A5%A8%A5%B9%A5%C8%2F%C6%C3%CA%CC%C8%C9)(ja)
 
+See also [README in Japanese](README.ja.md).
+
 ## Description
 AlbanKnights gives you keywords that the NPCs in Belten like automatically. Even though there is a [Keyword Table](http://mabinogi.wikiwiki.jp/?%BB%E4%A4%CE%B5%B3%BB%CE%C3%C4%B2%F1%CF%C3%A5%C6%A1%BC%A5%D6%A5%EB)(ja) but finding your own index of each NPCs is a little bit bothersome job, isn't it?
 
 And poor Shuan... I think he must take a vacation, so this tool will help him out from messed overwork, even if he can't take his bonus while using this utility though.
 
-At last, there was no special reason to write haskell, just I wanted to learn haskell (actually, this code is my first challenge to solve RealWorld problem using the language) and let the program executable. Because of it, you can run this program immediately after download and unzip the archive without compiling, building, download implementations and so on.
+At last, there was no special reason to write the code in haskell, just I wanted to learn it (actually, this code is my first challenge to solve RealWorld problem using the language) and let the program executable. Because of it, you can run this program immediately after download and unzip the archive without compiling, building, download implementations and so on.
 
 ## Features
 * Prompt based console program, from good old days.
 * Keep keyword indices of each NPCs: Dai, Eirlys, Kaour and Elsie.
 * You can `set`, `unset` or `hold` the index specifying NPC name.
-* When you type `next`, the indices will be calculated and re-set.
+* When you type `next`, the indices will be calculated and reset automatically.
+
+## Planned Features
+- [ ] Suggest index where currently you are.
+- [ ] Support special indices 98 and 99.
+- [ ] Localize; or remove hard-coded Japanese messages.
 
 ## Usage
 When you run the program, you'll see a prompt like this:

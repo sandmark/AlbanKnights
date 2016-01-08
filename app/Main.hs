@@ -92,7 +92,7 @@ npcKeywords key name index args = case args of
                     "'set' コマンドを使ってください。"
 
 wrappedPick :: String -> String -> Int -> Lock -> String
-wrappedPick name s i l = toString name $ fromRight $ AK.pick s (i-1)
+wrappedPick name s i l = toString name $ AK.unsafePick s (i-1)
   where toString name' keys =
           let locked = if l then " [固定]" else "\t"
           in "【" ++ name' ++ "】\t" ++ show i ++ locked ++ "\t" ++
@@ -192,10 +192,6 @@ npcNames = [("d","dai")
            ,("erusili", "elsie")
            ]
 
-fromRight :: Either a b -> b
-fromRight (Right x) = x
-fromRight (Left _)  = error "fromRight: Argument takes from 'Left _'"
-
 logo :: String
 logo =
   "    _   _ _                 _  __     _      _   _      \n" ++
@@ -204,6 +200,7 @@ logo =
   " /_/ \\_\\_|_.__/\\__,_|_||_| |_|\\_\\_||_|_\\__, |_||_\\__/__/\n" ++
   "                                       |___/            "
 
+welcome :: IO ()
 welcome = do
   putStrLn $ logo ++ "\n"
   putStrLn $
