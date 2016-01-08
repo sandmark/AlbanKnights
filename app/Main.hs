@@ -204,6 +204,7 @@ logo =
   " /_/ \\_\\_|_.__/\\__,_|_||_| |_|\\_\\_||_|_\\__, |_||_\\__/__/\n" ++
   "                                       |___/            "
 
+welcome :: IO ()
 welcome = do
   putStrLn $ logo ++ "\n"
   putStrLn $
