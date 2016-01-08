@@ -8,9 +8,11 @@ import Data.Maybe (fromMaybe)
 import System.Exit (exitSuccess)
 import System.IO (hFlush, stdout)
 import Control.Monad (when)
+import Paths_alban_knights (version)
+import Data.Version (showVersion)
 
 main :: IO ()
-main = repl emptyRating [1..]
+main = welcome >> repl emptyRating [1..]
 
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
@@ -193,3 +195,17 @@ npcNames = [("d","dai")
 fromRight :: Either a b -> b
 fromRight (Right x) = x
 fromRight (Left _)  = error "fromRight: Argument takes from 'Left _'"
+
+logo :: String
+logo =
+  "    _   _ _                 _  __     _      _   _      \n" ++
+  "   /_\\ | | |__  __ _ _ _   | |/ /_ _ (_)__ _| |_| |_ ___\n" ++
+  "  / _ \\| | '_ \\/ _` | ' \\  | ' <| ' \\| / _` | ' \\  _(_-<\n" ++
+  " /_/ \\_\\_|_.__/\\__,_|_||_| |_|\\_\\_||_|_\\__, |_||_\\__/__/\n" ++
+  "                                       |___/            "
+
+welcome = do
+  putStrLn $ logo ++ "\n"
+  putStrLn $
+    "Welcome to AlbanKnights " ++ showVersion version ++
+    " <https://github.com/sandmark/AlbanKnights/>\n"
