@@ -19,6 +19,11 @@ At last, there was no special reason to write haskell, just I wanted to learn ha
 * You can `set`, `unset` or `hold` the index specifying NPC name.
 * When you type `next`, the indices will be calculated and re-set.
 
+## Planned Features
+- [ ] Suggest index where currently you are.
+- [ ] Support special indices 98 and 99.
+- [ ] Localize; or remove hard-coded Japanese messages.
+
 ## Usage
 When you run the program, you'll see a prompt like this:
 
