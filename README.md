@@ -11,7 +11,7 @@ AlbanKnights gives you keywords that the NPCs in Belten like automatically. Even
 
 And poor Shuan... I think he must take a vacation, so this tool will help him out from messed overwork, even if he can't take his bonus while using this utility though.
 
-At last, there was no special reason to write haskell, just I wanted to learn haskell (actually, this code is my first challenge to solve RealWorld problem using the language) and let the program executable. Because of it, you can run this program immediately after download and unzip the archive without compiling, building, download implementations and so on.
+At last, there was no special reason to write the code in haskell, just I wanted to learn it (actually, this code is my first challenge to solve RealWorld problem using the language) and let the program executable. Because of it, you can run this program immediately after download and unzip the archive without compiling, building, download implementations and so on.
 
 ## Features
 * Prompt based console program, from good old days.
