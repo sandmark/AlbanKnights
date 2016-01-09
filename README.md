@@ -19,6 +19,7 @@ At last, there was no special reason to write the code in haskell, just I wanted
 * Prompt based console program, from good old days.
 * Keep keyword indices of each NPCs: Dai, Eirlys, Kaour and Elsie.
 * You can `set`, `unset` or `hold` the index specifying NPC name.
+* `list` shows keywords NPC loves by three, if the index is `set`.
 * When you type `next`, the indices will be calculated and reset automatically.
 
 ## Planned Features
