@@ -3,3 +3,4 @@
 .stack-work/
 src/AlbanKnights.exe
 *flymake.hs
+dist/
