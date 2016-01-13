@@ -29,6 +29,7 @@ cmdsSet = ["set", "s"]
 cmdsUnset :: [String]
 cmdsUnset = ["unset","u"]
 
+cmdsLock :: [String]
 cmdsLock = ["lock","lo","const","c","bind","b","unlock","unbind","toggle"
            ,"hold","unhold","h"]
 
