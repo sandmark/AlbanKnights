@@ -2,16 +2,20 @@ module AlbanKnights
     (
       pick
     , unsafePick
+    , toKeyword
     ) where
+
+toKeyword :: Int -> String
+toKeyword = (keywords !!)
 
 pick :: String -> Int -> Either String [String]
 pick key i = case lookup key table of
-  Just keys -> Right $ map (keywords !!) $ take 3 $ drop i keys
+  Just keys -> Right $ map toKeyword $ take 3 $ drop i keys
   Nothing   -> Left $ "No NPC found named " ++ key ++ "."
 
 unsafePick :: String -> Int -> [String]
 unsafePick key i = case lookup key table of
-  Just keys -> map (keywords !!) $ take 3 $ drop i keys
+  Just keys -> map toKeyword $ take 3 $ drop i keys
   Nothing   -> error "AlbanKnights.unsafePick: called with invalid npc name."
 
 keywords :: [String]
