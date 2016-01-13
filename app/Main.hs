@@ -67,7 +67,7 @@ update r = Right $ mapRating updateEach r
         updateEach (Just x, True) = (Just x, True)
         updateEach (Just x, False) = (Just $ up x, False)
           where up n = let n' = n + 3
-                       in if n' > 97 then n' - 97 else n'
+                       in if n' > 97 then 1 else n'
 
 isNPC :: String -> Bool
 isNPC name = case lookup name npcNames of

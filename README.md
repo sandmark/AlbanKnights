@@ -24,7 +24,7 @@ At last, there was no special reason to write the code in haskell, just I wanted
 
 ## Planned Features
 - [ ] Suggest index where currently you are.
-- [ ] Support special indices 98 and 99.
+- [x] Support special indices 98 and 99.
 - [ ] Localize; or remove hard-coded Japanese messages.
 
 ## Usage
