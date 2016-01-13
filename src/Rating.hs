@@ -45,7 +45,7 @@ setNpcIndex "elsie"  i r = r {elsie  = i}
 setNpcIndex _ _ _ = error "Rating.setNpcIndex: called with unknown field."
 
 mapRating :: (Index -> Index) -> Rating -> Rating
-mapRating f (Rating {dai = d, eirlys = a, kaour = k, elsie = e}) =
+mapRating f Rating {dai = d, eirlys = a, kaour = k, elsie = e} =
   Rating {dai = f d, eirlys = f a, kaour = f k, elsie = f e}
 
 emptyIndex :: Index
