@@ -3,7 +3,10 @@ module AlbanKnights
       pick
     , unsafePick
     , toKeyword
+    , getKeywordIndex
     ) where
+
+import Data.List (findIndex)
 
 toKeyword :: Int -> String
 toKeyword = (keywords !!)
@@ -20,6 +23,9 @@ unsafePick key i = case lookup key table of
 
 keywords :: [String]
 keywords = map head keywordAliases
+
+getKeywordIndex :: String -> Maybe Int
+getKeywordIndex keyword = findIndex (elem keyword) keywordAliases
 
 keywordAliases :: [[String]]
 keywordAliases = [["任務", "n", "m", "ninmu", "ninnmu", "mission"]
