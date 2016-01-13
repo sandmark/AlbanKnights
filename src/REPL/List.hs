@@ -9,7 +9,7 @@ list r = Left $ intercalate "\n" $ map f npcs
   where npcs = [("ダイ","dai",dai r),("アイリース","eirlys",eirlys r)
                ,("カオル","kaour",kaour r),("エルシィ","elsie",elsie r)
                ]
-        f (name,key,(i,l)) = case i of
+        f (name,key,(i,l,_)) = case i of
           Just n  -> wrappedPick name key n l
           Nothing -> "【" ++ name ++ "】\t(不明)"
 {-
