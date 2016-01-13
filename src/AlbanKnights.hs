@@ -19,7 +19,16 @@ unsafePick key i = case lookup key table of
   Nothing   -> error "AlbanKnights.unsafePick: called with invalid npc name."
 
 keywords :: [String]
-keywords = ["任務", "訓練", "遊び", "料理", "ファッション", "恋愛"]
+keywords = map head keywordAliases
+
+keywordAliases :: [[String]]
+keywordAliases = [["任務", "n", "m", "ninmu", "ninnmu", "mission"]
+                 ,["訓練", "t", "k", "kunren", "training"]
+                 ,["遊び", "p", "a", "play", "asobi", "playing"]
+                 ,["料理", "c", "ry", "cook", "ryouri", "cooking"]
+                 ,["ファッション", "f", "fasshon", "fassyon", "fashion"]
+                 ,["恋愛", "l", "re", "renai", "rennai", "lo", "love"]
+                 ]
 
 table :: [(String, [Int])]
 table =
