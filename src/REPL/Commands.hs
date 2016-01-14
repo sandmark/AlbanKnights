@@ -9,12 +9,16 @@ module REPL.Commands
        , isUnset
        , isLock
        , isStock
+       , isSuggest
        , npcNames
        ) where
 
 -- --------------------
 -- Command/Alias List
 --
+cmdsSuggest :: [String]
+cmdsSuggest = ["suggest", "sug", "su"]
+
 cmdsStock :: [String]
 cmdsStock = ["stock", "st"]
 
@@ -60,6 +64,8 @@ npcNames = [("d","dai")
 -- --------------------
 -- Export Functions
 --
+isSuggest :: String -> Bool
+isSuggest = isCmd cmdsSuggest
 
 isStock :: String -> Bool
 isStock = isCmd cmdsStock
