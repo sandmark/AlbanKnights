@@ -17,6 +17,7 @@ import REPL.Set
 import REPL.Unset
 import REPL.Lock
 import REPL.Update
+import REPL.Stock
 
 repl :: Rating -> [Int]-> IO ()
 repl _ [] = error "empty list given."
@@ -41,5 +42,6 @@ dispatch cmd args r
   | isUnset cmd = unset args r
   | isUpdate cmd = update r
   | isLock cmd = lock args r
+  | isStock cmd = stock args r
   | isNPC cmd = npc cmd args r
   | otherwise = Left $ "unknown command: '" ++ cmd ++ "'"

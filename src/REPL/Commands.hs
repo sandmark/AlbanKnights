@@ -8,12 +8,16 @@ module REPL.Commands
        , isNPC
        , isUnset
        , isLock
+       , isStock
        , npcNames
        ) where
 
 -- --------------------
 -- Command/Alias List
 --
+cmdsStock :: [String]
+cmdsStock = ["stock", "st"]
+
 cmdsUpdate :: [String]
 cmdsUpdate = ["update","next","x","up"]
 
@@ -56,6 +60,9 @@ npcNames = [("d","dai")
 -- --------------------
 -- Export Functions
 --
+
+isStock :: String -> Bool
+isStock = isCmd cmdsStock
 
 isLock :: String -> Bool
 isLock = isCmd cmdsLock
