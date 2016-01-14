@@ -2,6 +2,7 @@ module AlbanKnights
     (
       pick
     , unsafePick
+    , pickOne
     , toKeyword
     , getKeywordIndex
     , findKeyIndices
@@ -19,7 +20,6 @@ findKeyIndices name list = finder 0
                   | otherwise = finder (i+1)
           where keys = take count $ drop i xs
 
-
 toKeyword :: Int -> String
 toKeyword = (keywords !!)
 
@@ -32,6 +32,11 @@ unsafePick :: String -> Int -> [String]
 unsafePick key i = case lookup key table of
   Just keys -> map toKeyword $ take 3 $ drop i keys
   Nothing   -> error "AlbanKnights.unsafePick: called with invalid npc name."
+
+pickOne :: String -> Int -> String
+pickOne key i = case lookup key table of
+  Just keys -> toKeyword $ keys !! i
+  Nothing       -> error "AlbanKnights.pickOne: called with invalid npc name."
 
 keywords :: [String]
 keywords = map head keywordAliases
