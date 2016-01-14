@@ -12,5 +12,5 @@ lock [] _ = Left "NPCを指定してください"
 lock (arg:_) r =
   case getNpcIndex name r of
     Nothing -> Left "そのようなNPCは存在しません"
-    Just (i, locked) -> Right $ setNpcIndex name (i, not locked) r
+    Just (i, locked, st) -> Right $ setNpcIndex name (i, not locked, st) r
   where name = fromMaybe arg (lookup arg npcNames)

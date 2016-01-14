@@ -18,13 +18,14 @@ npc name args r = case npcLookup name of
   "eirlys" -> Left $ npcKeywords "eirlys" "アイリース" (eirlys r) args
   _     -> Left "そのようなNPCは存在しません"
 
-npcKeywords :: String -> String -> Index -> [String] -> String
+npcKeywords :: String -> String -> Info -> [String] -> String
 npcKeywords key name index args = case args of
   (i:_) -> wrappedPick name key (string2int i) False
   _     -> case index of
-    (Just i, l)  -> wrappedPick name key i l
-    (Nothing, _) -> name ++ "の番号は未設定です。\n" ++
+    (Just i, l, _)  -> wrappedPick name key i l
+    (Nothing, _, _) -> name ++ "の番号は未設定です。\n" ++
                     "'" ++ key ++ " 1' のようにして指定するか、" ++
                     "'set' コマンドを使ってください。"
 
+npcLookup :: String -> String
 npcLookup name = fromMaybe name (lookup name npcNames)
