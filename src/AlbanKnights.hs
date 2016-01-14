@@ -4,9 +4,21 @@ module AlbanKnights
     , unsafePick
     , toKeyword
     , getKeywordIndex
+    , findKeyIndices
     ) where
 
 import Data.List (findIndex)
+import Data.Maybe (fromJust)
+
+findKeyIndices :: String -> [Int] -> [Int]
+findKeyIndices name list = finder 0
+  where count = length list
+        xs    = fromJust $ lookup name table
+        finder i  | i > 99 = []
+                  | keys == list = i : finder (i+1)
+                  | otherwise = finder (i+1)
+          where keys = take count $ drop i xs
+
 
 toKeyword :: Int -> String
 toKeyword = (keywords !!)
