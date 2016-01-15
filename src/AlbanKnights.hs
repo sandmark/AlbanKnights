@@ -15,8 +15,8 @@ findKeyIndices :: String -> [Int] -> [Int]
 findKeyIndices name list = finder 0
   where count = length list
         xs    = fromJust $ lookup name table
-        finder i  | i > 99 = []
-                  | keys == list = i : finder (i+1)
+        finder i  | i > 98 = []
+                  | keys == list = i+count : finder (i+1)
                   | otherwise = finder (i+1)
           where keys = take count $ drop i xs
 
