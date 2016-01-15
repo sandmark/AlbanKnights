@@ -17,5 +17,5 @@ wrappedPick name s i l = toString name $ AK.unsafePick s (i-1)
 
 string2int :: String -> Int
 string2int str = case reads str :: [(Int, String)] of
-  [(i,_)] -> i
+  [(i,_)] -> if i < 1 then 1 else i
   []      -> 1
