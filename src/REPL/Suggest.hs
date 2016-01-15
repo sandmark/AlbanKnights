@@ -39,5 +39,5 @@ toLine _ name (_,_,[]) = printf "【%s】\tストックが空です" name
 toLine npc name (_,_,keys) = case findKeyIndices npc keys of
   [] -> printf "【%s】\t該当キーワードがありません" name
   xs -> printf "【%s】\t" name ++ intercalate "/" (map suggestion xs)
-  where suggestion i = let i' = i -1
-                       in printf "%s[%d]" (pickOne npc i') i'
+  where suggestion i = let i' = if i > 99 then i - 99 else i
+                       in printf "%s[%d]" (pickOne npc i') (i'+1)
