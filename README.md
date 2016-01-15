@@ -21,9 +21,10 @@ At last, there was no special reason to write the code in haskell, just I wanted
 * You can `set`, `unset` or `hold` the index specifying NPC name.
 * `list` shows keywords NPC loves by three, if the index is `set`.
 * When you type `next`, the indices will be calculated and reset automatically.
+* If you're not entirely sure what to talk with NPC, `suggest` shall help you.
 
 ## Planned Features
-- [ ] Suggest index where currently you are.
+- [X] Suggest index where currently we are.
 - [x] Support special indices 98 and 99.
 - [ ] Localize; or remove hard-coded Japanese messages.
 
@@ -42,6 +43,8 @@ Now you're ready to use commands.
 * `next` increments indices by 3 for all NPCs without holded one.
 * `hold npc` fixes index of NPC. This index won't be incremented when `next` called.
 * `unhold npc` unfixes index of NPC.
+* `stock npc keyword1 keyword2 ...` keeps Keyword for `suggest`. If you want to see the list, just hit `stock`.
+* `suggest npc [keywords]` lists up suggestions of next Keywords. `[keywords]` can be omitted by using `stock`.
 * `exit` displays current index of NPCs and exit the program.
 
 All `npc` must be proper form, `dai`, `eirlys`, `kaour` or `elsie`.
@@ -49,7 +52,7 @@ All `npc` must be proper form, `dai`, `eirlys`, `kaour` or `elsie`.
 ### Aliases
 There are some aliases of NPCs.
 
-NPC name | Alias1    | Alias2
+NPC name | Roman     | Omitted
 -------- | --------- | ------
 `dai`    |           | `d`
 `eirlys` | `airi-su` | `a`
@@ -58,14 +61,16 @@ NPC name | Alias1    | Alias2
 
 Also, there are some aliases of commands.
 
-Command | Alias1 | Alias2 | Alias3 | Alias4
-------- | ------ | ------ | ------ | ------
-`set`   | `s`
-`unset` | `u`
-`list`  | `ls`   | `l`
-`next`  | `x`    | `update` | `up`
-`hold`  | `h`    | `unhold` | `lock` | `unlock`
-`exit`  | `quit` | `q`
+Command   | Omitted | Alias    | Alias  | Alias    | Alias
+--------- | ------- | -------- | ------ | -------- | -----
+`set`     | `s`
+`unset`   | `u`
+`list`    | `l`     | `ls`
+`next`    | `x`     | `update` | `up`
+`hold`    | `h`     | `unhold` | `lock` | `unlock` | `toggle`
+`stock`   | `st`
+`suggest` | `sug`
+`exit`    | `q`     | `quit`   | `:q`
 
 For example, `set eirlys 27` can be replaced with `s a 27`.
 
